@@ -89,10 +89,19 @@ keyboard.addEventListener("click", (event) => {
             result = result.slice(0, -1);
             break;
         case "pow":
-            result += " ^ ";
+            
+            if (hasOperator(result)) {
+                result = result.slice(0, -3) + " ^ ";
+            }
+            else if (calculate(result) != undefined) {
+                result = calculate(result) + " ^ ";
+            }
+            else {
+                result += " ^ ";
+            }
             break;
         case "sqrt":
-            result += "√";
+            result =  `√(${result}) = ${sqrt(result)}`;
             break;
         case "sign":
         case "decimal":
@@ -148,6 +157,8 @@ function calculate(string) {
             return multiplication(operand1, operand2);
         case "/":
             return division(operand1, operand2);
+        case "^":
+            return pow(operand1, operand2);
     }
 }
 
@@ -156,7 +167,8 @@ function hasOperator(string) {
     if (operatorCheck == "+" ||
         operatorCheck == "-" ||
         operatorCheck == "*" ||
-        operatorCheck == "/") {
+        operatorCheck == "/" ||
+        operatorCheck == "^") {
             return true;
     }
     return false;
