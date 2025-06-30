@@ -37,16 +37,48 @@ keyboard.addEventListener("click", (event) => {
             result += "0";
             break;
         case "plus":
-            result += " + ";
+            if (hasOperator(result)) {
+                result = result.slice(0, -3) + " + ";
+            }
+            else if (calculate(result) != undefined) {
+                result = calculate(result) + " + ";
+            }
+            else {
+                result += " + ";
+            }
             break;
         case "minus":
-            result += " - ";
+            if (hasOperator(result)) {
+                result = result.slice(0, -3) + " - ";
+            }
+            else if (calculate(result) != undefined) {
+                result = calculate(result) + " - ";
+            }
+            else {
+                result += " - ";
+            }
             break;
         case "multiplication":
-            result += " * ";
+            if (hasOperator(result)) {
+                result = result.slice(0, -3) + " * ";
+            }
+            else if (calculate(result) != undefined) {
+                result = calculate(result) + " * ";
+            }
+            else {
+                result += " * ";
+            }
             break;
         case "division":
-            result += " / ";
+            if (hasOperator(result)) {
+                result = result.slice(0, -3) + " / ";
+            }
+            else if (calculate(result) != undefined) {
+                result = calculate(result) + " / ";
+            }
+            else {
+                result += " / ";
+            }
             break;
         case "percent":
         case "clearE":
@@ -67,7 +99,7 @@ keyboard.addEventListener("click", (event) => {
             result += ",";
             break;
         case "equal":
-            result = parseCalc(result);
+            result = calculate(result);
     }
 
     screen.textContent = result;
@@ -101,10 +133,6 @@ function sqrt(a) {
 }
 
 function calculate(string) {
-    string.split()
-}
-
-function parseCalc(string) {
     let parsed = string.split(" ");
 
     let operand1 = +parsed[0];
@@ -121,4 +149,15 @@ function parseCalc(string) {
         case "/":
             return division(operand1, operand2);
     }
+}
+
+function hasOperator(string) {
+    let operatorCheck = string.slice(-2, -1);
+    if (operatorCheck == "+" ||
+        operatorCheck == "-" ||
+        operatorCheck == "*" ||
+        operatorCheck == "/") {
+            return true;
+    }
+    return false;
 }
