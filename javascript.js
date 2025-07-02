@@ -37,50 +37,52 @@ keyboard.addEventListener("click", (event) => {
             result += "0";
             break;
         case "plus":
-            if (hasOperator(result)) {
+            if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " + ";
             }
-            else if (calculate(result) != undefined) {
-                result = calculate(result) + " + ";
+            else if (calculate(result, "equal") != undefined) {
+                result = calculate(result, "equal") + " + ";
             }
             else {
                 result += " + ";
             }
             break;
         case "minus":
-            if (hasOperator(result)) {
+            if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " - ";
             }
-            else if (calculate(result) != undefined) {
-                result = calculate(result) + " - ";
+            else if (calculate(result, "equal") != undefined) {
+                result = calculate(result, "equal") + " - ";
             }
             else {
                 result += " - ";
             }
             break;
         case "multiplication":
-            if (hasOperator(result)) {
+            if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " * ";
             }
-            else if (calculate(result) != undefined) {
-                result = calculate(result) + " * ";
+            else if (calculate(result, "equal") != undefined) {
+                result = calculate(result, "equal") + " * ";
             }
             else {
                 result += " * ";
             }
             break;
         case "division":
-            if (hasOperator(result)) {
+            if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " / ";
             }
-            else if (calculate(result) != undefined) {
-                result = calculate(result) + " / ";
+            else if (calculate(result, "equal") != undefined) {
+                result = calculate(result, "equal") + " / ";
             }
             else {
                 result += " / ";
             }
             break;
         case "percent":
+            result = calculate(result, event.target.id);
+            break;
         case "clearE":
         case "clear":
             result = "";
@@ -89,8 +91,7 @@ keyboard.addEventListener("click", (event) => {
             result = result.slice(0, -1);
             break;
         case "pow":
-            
-            if (hasOperator(result)) {
+            if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " ^ ";
             }
             else if (calculate(result) != undefined) {
@@ -105,12 +106,12 @@ keyboard.addEventListener("click", (event) => {
             break;
         case "sign":
         case "decimal":
-            result += ",";
+            result += ".";
             break;
         case "equal":
-            result = calculate(result);
+            result = String(calculate(result, event.target.id));
+            break;
     }
-
     screen.textContent = result;
 })
 
@@ -130,6 +131,10 @@ function multiplication (a, b) {
 }
 
 function division(a, b) {
+    if (b === 0) {
+        alert("Unable to divide by zero");
+        return "";
+    }
     return a / b;
 }
 
@@ -141,28 +146,44 @@ function sqrt(a) {
     return Math.sqrt(a);
 }
 
-function calculate(string) {
+function calculate(string, id) {
     let parsed = string.split(" ");
 
     let operand1 = +parsed[0];
     let operator = parsed[1];
     let operand2 = +parsed[2];
 
-    switch (operator) {
-        case "+":
-            return addition(operand1, operand2);
-        case "-":
-            return substraction(operand1, operand2);
-        case "*":
-            return multiplication(operand1, operand2);
-        case "/":
-            return division(operand1, operand2);
-        case "^":
-            return pow(operand1, operand2);
+    if (id === "equal"){
+        switch (operator) {
+            case "+":
+                return addition(operand1, operand2);
+            case "-":
+                return substraction(operand1, operand2);
+            case "*":
+                return multiplication(operand1, operand2);
+            case "/":
+                return division(operand1, operand2);
+            case "^":
+                return pow(operand1, operand2);
+        }
+    }
+    if (id === "percent") {
+        switch (operator) {
+            case "+":
+                return operand1 + (operand1 * operand2 / 100);
+            case "-":
+                return operand1 - (operand1 * operand2 / 100);
+            case "*":
+                return operand1 * operand2 / 100;
+            case "/":
+                return operand1 / operand2 / 100;
+            default:
+                return 0;
+        }
     }
 }
 
-function hasOperator(string) {
+function endsWithOperator(string) {
     let operatorCheck = string.slice(-2, -1);
     if (operatorCheck == "+" ||
         operatorCheck == "-" ||
