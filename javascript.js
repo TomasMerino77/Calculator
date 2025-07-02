@@ -81,7 +81,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "percent":
-            result = calculate(result, event.target.id);
+            result = String(calculate(result, event.target.id));
             break;
         case "clearE":
         case "clear":
@@ -105,8 +105,17 @@ keyboard.addEventListener("click", (event) => {
             result =  `√(${result}) = ${sqrt(result)}`;
             break;
         case "sign":
+            break;
         case "decimal":
-            result += ".";
+            if (typeof(getCurrentNumber(result)) != "number") {
+                result += "0.";
+            }
+            else if (getCurrentNumber(result).includes(".")) {
+                break;
+            }
+            else {
+                result += ".";
+            }
             break;
         case "equal":
             result = String(calculate(result, event.target.id));
@@ -193,4 +202,9 @@ function endsWithOperator(string) {
             return true;
     }
     return false;
+}
+
+function getCurrentNumber(string) {
+    let parts = string.split(" ");
+    return parts[parts.length - 1]
 }
