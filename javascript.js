@@ -5,6 +5,7 @@ let result = screen.textContent;
 
 let keyboard = document.querySelector("#keyboard");
 keyboard.addEventListener("click", (event) => {
+    let currentNumber = getCurrentNumber(result);
     switch (event.target.id) {
         case "1":
             result += "1";
@@ -34,7 +35,11 @@ keyboard.addEventListener("click", (event) => {
             result += "9";
             break;
         case "0":
-            result += "0";
+            if (currentNumber.length == 0 ||
+                currentNumber.length >= 1 && currentNumber != 0 ||
+                currentNumber.includes(".")) {
+                result += "0";
+            }
             break;
         case "plus":
             if (endsWithOperator(result)) {
@@ -107,11 +112,11 @@ keyboard.addEventListener("click", (event) => {
         case "sign":
             break;
         case "decimal":
-            if (typeof(getCurrentNumber(result)) != "number") {
-                result += "0.";
-            }
-            else if (getCurrentNumber(result).includes(".")) {
+            if (currentNumber.includes(".")) {
                 break;
+            }
+            else if (currentNumber == "") {
+                result += "0.";
             }
             else {
                 result += ".";
