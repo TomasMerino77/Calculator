@@ -1,6 +1,7 @@
 //DOM manipulation
 let screen = document.querySelector("#screen");
 let result = screen.textContent;
+let isResult = false;
 
 
 let keyboard = document.querySelector("#keyboard");
@@ -8,31 +9,21 @@ keyboard.addEventListener("click", (event) => {
     let currentNumber = getCurrentNumber(result);
     switch (event.target.id) {
         case "1":
-            result += "1";
-            break;
         case "2":
-            result += "2";
-            break;
         case "3":
-            result += "3";
-            break;
         case "4":
-            result += "4";
-            break;
         case "5":
-            result += "5";
-            break;
         case "6":
-            result += "6";
-            break;
         case "7":
-            result += "7";
-            break;
         case "8":
-            result += "8";
-            break;
         case "9":
-            result += "9";
+            if (isResult) {
+                result = event.target.id;
+                isResult = false;
+            }
+            else {
+                result += event.target.id;
+            }
             break;
         case "0":
             if (currentNumber.length == 0 ||
@@ -42,6 +33,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "plus":
+            isResult = false;
             if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " + ";
             }
@@ -53,6 +45,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "minus":
+            isResult = false;
             if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " - ";
             }
@@ -64,6 +57,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "multiplication":
+            isResult = false;
             if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " * ";
             }
@@ -75,6 +69,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "division":
+            isResult = false;
             if (endsWithOperator(result)) {
                 result = result.slice(0, -3) + " / ";
             }
@@ -86,6 +81,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "percent":
+            isResult = true;
             result = String(calculate(result, event.target.id));
             break;
         case "clearE":
@@ -93,7 +89,12 @@ keyboard.addEventListener("click", (event) => {
             result = "";
             break;
         case "backspace":
-            result = result.slice(0, -1);
+            if (isResult) {
+                result = "";
+            }
+            else {
+                result = result.slice(0, -1);
+            }
             break;
         case "pow":
             if (endsWithOperator(result)) {
@@ -123,6 +124,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "equal":
+            isResult = true;
             result = String(calculate(result, event.target.id));
             break;
     }
@@ -162,7 +164,6 @@ function sqrt(a) {
 
 function calculate(string, id) {
     let parsed = string.split(" ");
-
     let operand1 = +parsed[0];
     let operator = parsed[1];
     let operand2 = +parsed[2];
@@ -181,6 +182,7 @@ function calculate(string, id) {
                 return pow(operand1, operand2);
         }
     }
+
     if (id === "percent") {
         switch (operator) {
             case "+":
