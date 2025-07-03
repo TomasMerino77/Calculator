@@ -1,11 +1,11 @@
 //DOM manipulation
 let screen = document.querySelector("#screen");
-let result = screen.textContent;
 let isResult = false;
 
 
 let keyboard = document.querySelector("#keyboard");
 keyboard.addEventListener("click", (event) => {
+    let result = screen.textContent;
     let currentNumber = getCurrentNumber(result);
     switch (event.target.id) {
         case "1":
@@ -33,52 +33,16 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "plus":
-            isResult = false;
-            if (endsWithOperator(result)) {
-                result = result.slice(0, -3) + " + ";
-            }
-            else if (calculate(result, "equal") != undefined) {
-                result = calculate(result, "equal") + " + ";
-            }
-            else {
-                result += " + ";
-            }
+            result = addOperator("+", result)
             break;
         case "minus":
-            isResult = false;
-            if (endsWithOperator(result)) {
-                result = result.slice(0, -3) + " - ";
-            }
-            else if (calculate(result, "equal") != undefined) {
-                result = calculate(result, "equal") + " - ";
-            }
-            else {
-                result += " - ";
-            }
+            result = addOperator("-", result)
             break;
         case "multiplication":
-            isResult = false;
-            if (endsWithOperator(result)) {
-                result = result.slice(0, -3) + " * ";
-            }
-            else if (calculate(result, "equal") != undefined) {
-                result = calculate(result, "equal") + " * ";
-            }
-            else {
-                result += " * ";
-            }
+            result = addOperator("*", result)
             break;
         case "division":
-            isResult = false;
-            if (endsWithOperator(result)) {
-                result = result.slice(0, -3) + " / ";
-            }
-            else if (calculate(result, "equal") != undefined) {
-                result = calculate(result, "equal") + " / ";
-            }
-            else {
-                result += " / ";
-            }
+            result = addOperator("/", result)
             break;
         case "percent":
             isResult = true;
@@ -97,15 +61,7 @@ keyboard.addEventListener("click", (event) => {
             }
             break;
         case "pow":
-            if (endsWithOperator(result)) {
-                result = result.slice(0, -3) + " ^ ";
-            }
-            else if (calculate(result) != undefined) {
-                result = calculate(result) + " ^ ";
-            }
-            else {
-                result += " ^ ";
-            }
+            result = addOperator("^", result)
             break;
         case "sqrt":
             result =  `√(${result}) = ${sqrt(result)}`;
@@ -160,6 +116,21 @@ function pow(a, b) {
 
 function sqrt(a) {
     return Math.sqrt(a);
+}
+
+function addOperator(operator, result) {
+    isResult = false;
+    if (endsWithOperator(result)) {
+        result = result.slice(0, -3) + ` ${operator} `;
+    }
+    else if (calculate(result, "equal") != undefined) {
+        result = calculate(result, "equal") + ` ${operator} `;
+    }
+    else {
+        result += ` ${operator} `;
+    }
+
+    return result;
 }
 
 function calculate(string, id) {
