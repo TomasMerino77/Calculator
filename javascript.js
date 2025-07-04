@@ -137,7 +137,10 @@ function calculate(string, id) {
     let parsed = string.split(" ");
     let operand1 = +parsed[0];
     let operator = parsed[1];
-    let operand2 = +parsed[2];
+    if (operator == undefined) return operand1;
+    let operand2 = (parsed[2] == "") ? operand1 : +parsed[2];
+
+    if (operand2 == undefined) operand2 = operand1;
 
     if (id === "equal"){
         switch (operator) {
