@@ -67,6 +67,16 @@ keyboard.addEventListener("click", (event) => {
             result =  `√(${result}) = ${sqrt(result)}`;
             break;
         case "sign":
+            if (!currentNumber.includes("-")){
+                result = result.slice(0, -currentNumber.length);
+                currentNumber = "-" + currentNumber;
+                result += currentNumber;
+            }
+            else {
+                result = result.slice(0, -currentNumber.length);
+                currentNumber = currentNumber.slice(1, currentNumber.length);
+                result += currentNumber;
+            }
             break;
         case "decimal":
             if (currentNumber.includes(".")) {
